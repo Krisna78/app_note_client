@@ -1,7 +1,5 @@
 import 'package:app_note_client/controller/note_controller.dart';
-import 'package:app_note_client/home/note_home/update_note.dart';
 import 'package:app_note_client/home/note_home/view_detail_note.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
