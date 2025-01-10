@@ -99,33 +99,92 @@ class _NoteListPageState extends State<NoteListPage> {
                           ),
                           direction: DismissDirection.endToStart,
                           confirmDismiss: (direction) async {
-                            bool shouldDelete = false;
-                            AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.warning,
-                              animType: AnimType.rightSlide,
-                              title: "Konfirmasi",
-                              desc: 'Apakah ingin menghapus ${income.title}?',
-                              btnCancelOnPress: () {
-                                shouldDelete = false;
-                              },
-                              btnOkOnPress: () async {
-                                await widget.noteController
-                                    .deleteNote(income.id!);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      '${income.title} Terhapus',
-                                      style: TextStyle(fontSize: 16),
+                            bool? shouldDelete = await Get.dialog<bool>(
+                              Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: SizedBox(
+                                  width: 300,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Text(
+                                          "Konfirmasi",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          'Apakah ingin menghapus "${income.title}" ?',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Get.back(result: false);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.grey,
+                                              ),
+                                              child: const Text(
+                                                "Batal",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                await widget.noteController
+                                                    .deleteNote(income.id!);
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      '${income.title} Terhapus',
+                                                      style: const TextStyle(
+                                                          fontSize: 16),
+                                                    ),
+                                                    backgroundColor:
+                                                        const Color(0xFF508D4E),
+                                                    duration: const Duration(
+                                                        seconds: 1),
+                                                  ),
+                                                );
+                                                Get.back(
+                                                    result:
+                                                        true); // Konfirmasi hapus
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.red,
+                                              ),
+                                              child: const Text(
+                                                "Hapus",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                    backgroundColor: Color(0xFF508D4E),
-                                    duration: const Duration(seconds: 1),
                                   ),
-                                );
-                                shouldDelete = true;
-                              },
-                            ).show();
-                            return shouldDelete;
+                                ),
+                              ),
+                              barrierDismissible:
+                                  false, // Klik di luar dialog tidak menutup
+                            );
+
+                            return shouldDelete ?? false;
                           },
                           child: GestureDetector(
                             onTap: () {
